@@ -14,7 +14,8 @@ The game is designed around the following simple rules:
 So far there is:
 * an empty .cpp file where a C++ implementation should be
 * a Python command line implementation with a finite grid and random initial configuration
-
+  * run with ```python3 conway.py <size of grid> <number of iterations>```
+  * example ```python3 conway.py 10 10```
 
 # &lt;project name&gt; is an [OPEN Open Source Project](http://openopensource.org/)
 
