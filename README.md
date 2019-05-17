@@ -10,6 +10,12 @@ The game is designed around the following simple rules:
 
 > The operation of the game starts with an initial configuration on a two dimensional grid. This infinite square grid consists of cells with two possible states, alive or dead. Each cell has eight neighbors, namely the eight cells that touch it. The game operates in iterations, called ticks. Each tick applies the four rules of the game to every cell on the board simultaneously.
 
+## This Repository
+So far there is:
+* an empty .cpp file where a C++ implementation should be
+* a Python command line implementation with a finite grid and random initial configuration
+
+
 # &lt;project name&gt; is an [OPEN Open Source Project](http://openopensource.org/)
 
 -----------------------------------------
