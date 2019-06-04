@@ -58,7 +58,6 @@ def printGrid( grid, generation ) :
       else :
         print('█', end='')
     print()
-
 #--------------------------------------------------
 def randomGrid() :
   # Create grid of size 12
@@ -67,7 +66,6 @@ def randomGrid() :
   for y in range( 1, SIZE+1 ) :
     for x in range( 1, SIZE+1 ) :
       grid[x][y] = random.randint( 0, 1 )
-  print("randomGrid: %s" % type(grid).__name__)
   return grid
 #--------------------------------------------------
 # Presets
@@ -84,27 +82,22 @@ def preset1Grid() :
            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
-  print("preset1Grid: %s" % type(grid).__name__)
+  
   return grid
 #--------------------------------------------------
 def chosePresetGrid( choice ) :
-  print( choice )
-  print("choice type: %s" % type(choice).__name__)
   switcher = {
     1: randomGrid,
-	2: preset1Grid
+	  2: preset1Grid
   }
   # Get the function from switcher dictionary
   func = switcher.get( choice, lambda: print("Invalid choice") )
   # Execute the function
-  grid = func()
-  print("chosePresetGrid: %s" % type(grid).__name__)
-  return grid
+  return func()
 #--------------------------------------------------
 def main() :  
   choice = int(input("Select the starting form of the grid.\n\t1. Random\n\t2. Tumbler\n"))
   grid = chosePresetGrid( choice )
-  print("Result of choice: %s" % type(grid).__name__)
 
   # Execute 10 generations of game of life
   for i in range( GENERATIONS ) :

@@ -106,4 +106,4 @@ while 1:
     grid = copy.deepcopy( tick( grid, size ) )
 
 
-    pygame.display.flip()
+pygame.display.flip()
