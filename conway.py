@@ -4,7 +4,7 @@
 import sys
 import random
 import copy
-
+import pygame
 #--------------------------------------------------
 def tick( grid, n ) :
   updatedGrid = copy.deepcopy( grid )
