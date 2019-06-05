@@ -171,7 +171,7 @@ def main() :
       if event.type == pygame.MOUSEBUTTONDOWN:
         clickedPosition = pygame.mouse.get_pos()
         #x and y coordinates are inverted 
-        if((int(clickedPosition[1]/64)+1) < GRID_SIZE and (int(clickedPosition[0]/64)+1) < GRID_SIZE):
+        if((int(clickedPosition[1]/64)+1) <= GRID_SIZE and (int(clickedPosition[0]/64)+1) <= GRID_SIZE):
           if grid[int(clickedPosition[1]/64)+1][int(clickedPosition[0]/64)+1] == 1:
             grid[int(clickedPosition[1]/64)+1][int(clickedPosition[0]/64)+1] = 0
           else:
