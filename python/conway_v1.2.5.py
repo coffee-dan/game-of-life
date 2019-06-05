@@ -5,7 +5,7 @@ import math
 #--------------------------------------------------
 pygame.init()
 GRID_SIZE = 10
-NUM_OF_PRESETS = 3
+NUM_OF_PRESETS = 6
 size = width, height = 640, 640
 
 #gui assets
