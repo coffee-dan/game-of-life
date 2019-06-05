@@ -57,8 +57,6 @@ def tick( grid, n ) :
       	  updatedGrid[x][y] = 1
 
   return updatedGrid
-
-
 #--------------------------------------------------
 def printGrid( grid, gui_grid ):
   #x and y coordinates are inverted 
