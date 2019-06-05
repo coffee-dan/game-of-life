@@ -16,7 +16,8 @@ random_button = pygame.image.load("random_button.png")
 #window setup
 pygame.display.set_icon(full_cell)
 pygame.display.set_caption('game of life')
-screen = pygame.display.set_mode(size)
+screen = pygame.display.set_mode(size,pygame.FULLSCREEN)
+# pygame.display.set_mode(pygame.FULLSCREEN)
 pygame.mouse.set_visible(False)
 #--------------------------------------------------
 def tick( grid, n ) :
@@ -156,6 +157,11 @@ def main() :
       # Watch for exit button press
       if event.type == pygame.QUIT: sys.exit()
 
+      # Watcg for esc key press
+      if event.type == pygame.KEYDOWN:
+        if event.key == pygame.K_ESCAPE:
+          sys.exit()
+
       # Watch for mouse movement
       if event.type == pygame.MOUSEMOTION:
         newMousePosition = pygame.mouse.get_pos()
@@ -165,10 +171,11 @@ def main() :
       if event.type == pygame.MOUSEBUTTONDOWN:
         clickedPosition = pygame.mouse.get_pos()
         #x and y coordinates are inverted 
-        if grid[int(clickedPosition[1]/64)+1][int(clickedPosition[0]/64)+1] == 1:
-          grid[int(clickedPosition[1]/64)+1][int(clickedPosition[0]/64)+1] = 0
-        else:
-          grid[int(clickedPosition[1]/64)+1][int(clickedPosition[0]/64)+1] = 1
+        if((int(clickedPosition[1]/64)+1) < GRID_SIZE and (int(clickedPosition[0]/64)+1) < GRID_SIZE):
+          if grid[int(clickedPosition[1]/64)+1][int(clickedPosition[0]/64)+1] == 1:
+            grid[int(clickedPosition[1]/64)+1][int(clickedPosition[0]/64)+1] = 0
+          else:
+            grid[int(clickedPosition[1]/64)+1][int(clickedPosition[0]/64)+1] = 1
 
     #display gui grid based on grid calculation matrix
     printGrid( grid, gui_grid )
