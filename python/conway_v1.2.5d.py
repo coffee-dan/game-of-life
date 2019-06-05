@@ -2,6 +2,7 @@ import sys, pygame
 import copy
 import random
 import math
+import pprint
 #--------------------------------------------------
 pygame.init()
 GRID_SIZE = 10
@@ -87,36 +88,47 @@ def debugGrid() :
 # Presets
 def loadPreset( choice ) :
   presets_file = open( "grid_presets.txt" )
-  for i in range(choice) :
-    if i == (choice - 1) :
-      preset = str( presets_file.readline() )
+  for i in range( 1, choice ) :
+    preset = str( presets_file.readline() )
+      
 
   preset = preset.strip( "\n" )
   preset = preset.split( "," )
-  
-  total_rows = GRID_SIZE - int( preset[1] )
-  rows = math.ceil( total_rows / 2 ), math.floor( total_rows / 2 )
 
-  total_cols = GRID_SIZE - int( preset[2] )
-  cols = math.ceil( total_cols / 2 ), math.floor( total_cols / 2 )
+  total_rows = GRID_SIZE - int( preset[2] ) #4
+  row_offset = math.ceil( total_rows / 2 ), math.floor( total_rows / 2 ) #2,2
+  row_barrier = row_offset[0] + 1, GRID_SIZE - row_offset[1] #3,8
+
+  total_cols = GRID_SIZE - int( preset[1] ) #3
+  col_offset = math.ceil( total_cols / 2 ), math.floor( total_cols / 2 ) #2,1
+  col_barrier = col_offset[0] + 1, GRID_SIZE - col_offset[1] #3,9
 
   # Create a 12 by 12 grid of 0's
   grid = [ [ 0 ] * ( GRID_SIZE+2 ) for _ in range( GRID_SIZE+2 ) ]
   # Populate grid according to chosen preset
-  #for y in range( 1, GRID_SIZE+1 ) :
-  #  for x in range( 1, GRID_SIZE+1 ) :
-      
-
-  # process the data
-  #print( preset )
-  #print( str( rows ) )
-  #print( str( cols ) )
-  return debugGrid()
+  line_num = 3
+  for y in range( 1, GRID_SIZE+1 ) :
+    i = 0
+    for x in range( 1, GRID_SIZE+1 ) :
+      if y < row_barrier[0] :
+        grid[x][y] = 0
+      elif y > row_barrier[1] :
+        grid[x][y] = 0
+      elif x < col_barrier[0] :
+        grid[x][y] = 0
+      elif x > col_barrier[1] :
+        grid[x][y] = 0
+      else :
+        grid[x][y] = int( preset[ line_num ][ i ] )
+        i += 1
+    if not (y < col_barrier[0] or y > col_barrier[1]) :
+      line_num += 1
+  return grid
 #--------------------------------------------------
 def choseStartingGrid( choice ) :
   if choice == 1 :
     return randomGrid()
-  elif choice < 1 or choice > 2 :
+  elif choice < 1 or choice > 3 :
     print ("Invalid Choice")
     sys.exit(1)
   else :
