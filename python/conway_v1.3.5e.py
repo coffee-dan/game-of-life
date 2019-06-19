@@ -8,7 +8,7 @@ from PIL import Image
 pygame.init()
 GRID_SIZE = 100
 NUM_OF_PRESETS = 5
-size = width, height = 1920, 1080
+size = width, height = 1366, 768
 CELL_SIZE = int( width / GRID_SIZE )
 
 # dynamic asset resizing

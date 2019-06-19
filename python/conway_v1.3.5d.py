@@ -17,7 +17,7 @@ cursor = pygame.image.load( 'dan_cursor.png' )
 random_button = pygame.image.load( 'random_button.png' )
 
 #--------------------------------------------------
-def tick( c_grid ) :
+def generation( c_grid ) :
   n = GRID_SIZE
   updated_grid = copy.deepcopy( c_grid )
 
@@ -206,18 +206,18 @@ def main() :
     # Display visual grid based on computational grid
     printGrid( screen, c_grid, v_grid )
 
-    # Only execute tick(...) 1 out of every generation_frequency times and handle pauses
+    # Display selection cursor
+    screen.blit( cursor, new_mouse_pos )
+
+    # Only execute generation(...) 1 out of every generation_frequency times and handle pauses
     if frequency_count == generation_frequency and generation_flag :
       # Update computational grid based on game of life rules. One generation
-      c_grid = copy.deepcopy( tick( c_grid ) )
+      c_grid = copy.deepcopy( generation( c_grid ) )
       frequency_count = 1
     elif generation_flag : 
       frequency_count += 1
     else :
       pass
-
-    # Display selection cursor
-    screen.blit( cursor, new_mouse_pos )
 
     # Update entire window
     pygame.display.flip()
