@@ -155,7 +155,7 @@ def setupWindow() :
   #window setup
   pygame.display.set_icon( full_cell )
   pygame.display.set_caption( 'game of life' )
-  screen = pygame.display.set_mode( WINDOW_SIZE, pygame.FULLSCREEN )
+  screen = pygame.display.set_mode( (0,0), pygame.FULLSCREEN )
 
   # Make screen white
   screen.fill( [ 255, 255, 255 ] )
@@ -213,7 +213,7 @@ def main() :
       if event.type == pygame.MOUSEBUTTONDOWN:
         clicked_pos = pygame.mouse.get_pos()
         # Determine which cell was clicked if one was clicked
-        cell_clicked = int( clicked_pos[ 0 ] / CELL_SIZE )+1, int( clicked_pos[ 1 ] / CELL_SIZE )+1
+        cell_clicked = int( ( clicked_pos[ 0 ] - horizontal_offset ) / CELL_SIZE )+1, int( ( clicked_pos[ 1 ] - vertical_offset ) / CELL_SIZE )+1
         #x and y coordinates are inverted
         if( cell_clicked[ 1 ] <= NUM_OF_CELLS and cell_clicked[ 0 ] <= NUM_OF_CELLS ) :
           if c_grid[ cell_clicked[ 1 ] ][ cell_clicked[ 0 ] ] == 1 :
