@@ -161,7 +161,11 @@ def loadAssets( cell_size, palette ) :
   cursor = pygame.image.load( 'dan_cursor.png' )
   #  Random button unused
   # random_button = pygame.image.load( 'random_button.png' )
-  return full_cell, empty_cell, cursor
+
+  # Load theme and select sound
+  theme = pygame.mixer.music.load( 'generated_theme_1.ogg' )
+  cell_select = pygame.mixer.Sound( 'cell_select_1.ogg' )
+  return full_cell, empty_cell, cursor, theme, cell_select
 #--------------------------------------------------
 def main() :
   pygame.init()
@@ -178,7 +182,7 @@ def main() :
   menu()
 
   # Load assets according to specified palette
-  full_cell, empty_cell, cursor = loadAssets( cell_size, 'gameboy' )
+  full_cell, empty_cell, cursor, theme, cell_select = loadAssets( cell_size, 'gameboy' )
 
   # Create empty grid of size NUM_OF_CELLS for display
   v_grid = [ [ 0 ] * NUM_OF_CELLS for _ in range( NUM_OF_CELLS ) ]
@@ -208,10 +212,13 @@ def main() :
   cell_selection_dict = dict()
   cell_selection = False
 
+  # set music to play
+  pygame.mixer.music.set_volume(.25) 
+  pygame.mixer.music.play()
   while 1:
 
     # set fps
-    clock.tick(120)
+    clock.tick(30)
 
     # Clear screen with background grey
     screen.fill( [ 15, 56, 15 ] )
@@ -225,7 +232,13 @@ def main() :
     # Update entire window
     pygame.display.flip()
 
+    # loop song every 30 seconds
+    if pygame.mixer.music.get_pos() > 29999:
+      print('looping')
+      pygame.mixer.music.play()
 
+      
+    # print('hello')
     # Event watchdog
     for event in pygame.event.get() :
       # Watch for exit button press
@@ -254,6 +267,8 @@ def main() :
    
           # update if valid position and coordinate is not already in dictionary
           if ( cell_clicked[ 1 ] <= NUM_OF_CELLS and cell_clicked[ 0 ] <= NUM_OF_CELLS ) and ( cell_clicked not in cell_selection_dict.keys() ):
+            # play sound effect when new entry is added
+            cell_select.play()
             cell_selection_dict.update({ cell_clicked : c_grid[cell_clicked[0]][cell_clicked[1]] })
 
 
@@ -267,6 +282,7 @@ def main() :
       # Watch for mouse clicks
       if event.type == pygame.MOUSEBUTTONDOWN :
         cell_selection = True
+        cell_select.play()
         clicked_pos = pygame.mouse.get_pos()
         # Determine which cell was clicked if one was clicked
         cell_clicked = int( ( clicked_pos[ 0 ] - horizontal_offset ) / cell_size )+1, int( ( clicked_pos[ 1 ] - vertical_offset ) / cell_size )+1
