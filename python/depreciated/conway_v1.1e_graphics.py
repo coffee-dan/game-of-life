@@ -3,6 +3,9 @@ import copy
 pygame.init()
 import time
 import random
+#------------------------------------#
+# how to run: python3 conway.py <size of grid> <number of iterations>
+#------------------------------------#
 
 def tick( grid, n ) :
   updatedGrid = copy.deepcopy( grid )
@@ -106,4 +109,4 @@ while 1:
     grid = copy.deepcopy( tick( grid, size ) )
 
 
-pygame.display.flip()
+    pygame.display.flip()
