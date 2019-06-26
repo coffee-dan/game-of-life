@@ -4,3 +4,6 @@ full_cell_current.png
 
 # Testing folder
 test/
+
+# OS generated files
+desktop.ini

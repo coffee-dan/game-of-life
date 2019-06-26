@@ -178,9 +178,6 @@ def main() :
   short_side = min( window_width, window_height )
   cell_size = int( short_side / NUM_OF_CELLS )
 
-  # Display menu - not implemented
-  menu()
-
   # Load assets according to specified palette
   full_cell, empty_cell, cursor, theme, cell_select = loadAssets( cell_size, 'gameboy' )
 
@@ -200,9 +197,6 @@ def main() :
   # Load preset for grid based on command line input
   choice = int( sys.argv[ 1 ] )
   c_grid = choseStartingGrid( choice )
-
-  # Get initial cursor position
-  cursor_pos = pygame.mouse.get_pos()
 
   # new pause mode
   clock = pygame.time.Clock()

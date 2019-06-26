@@ -93,7 +93,7 @@ def randomGrid() :
 #--------------------------------------------------
 def loadPreset( choice ) :
   # Load in all presets as list
-  with open( 'grid_presets.txt' ) as presets_file :
+  with open( path.join( '..', 'grid_presets.txt' ) ) as presets_file :
     presets = presets_file.read().split( '\n' )	
 
   # Continue with only chosen preset as list of preset data
