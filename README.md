@@ -13,38 +13,12 @@ The game is designed around the following simple rules:
 ## This Repository
 So far there is:
 * an empty .cpp file where a C++ implementation should be
-* a Python command line implementation with a finite grid and random initial configuration
-  * run with ```python3 conway.py <size of grid> <number of iterations>```
-  * example ```python3 conway.py 10 10```
-
-# &lt;project name&gt; is an [OPEN Open Source Project](http://openopensource.org/)
-
------------------------------------------
-
-## What?
-
-Individuals making significant and valuable contributions are given
-commit-access to the project to contribute as they see fit. This project
-is more like an open wiki than a standard guarded open source project.
-
-## Rules
-
-There are a few basic ground-rules for contributors:
-
-1. **No `--force` pushes** or modifying the Git history in any way.
-1. **Non-master branches** ought to be used for ongoing work.
-1. **External API changes and significant modifications** ought to be subject to an **internal pull-request** to solicit feedback from other contributors.
-1. Internal pull-requests to solicit feedback are *encouraged* for any other non-trivial contribution but left to the discretion of the contributor.
-1. Contributors should attempt to adhere to the prevailing code-style.
-
-## Releases
-
-Declaring formal releases remains the prerogative of the project maintainer.
-
-## Changes to this arrangement
-
-This is an experiment and feedback is welcome! This document may also be
-subject to pull-requests or changes by contributors where you believe
-you have something valuable to add or change.
-
-Get a copy of this manifesto as [markdown](https://raw.githubusercontent.com/openopensource/openopensource.github.io/master/Readme.md) and use it in your own projects.
+* a Python x PyGame graphical implemtation with a finite bounded grid, random initial configuration and 9 presets
+  * run with ```py conway_v1.3.7x.py <preset number>``` on Windows or ```python3 conway_v1.3.7x.py <preset number>``` on Linux
+  * example ```py conway_v1.3.7x.py <preset number>```
+  * all other python versions in the repository are graphical
+    * Not all versions run the same way, most have comments in the code explaining things
+  * the number of presets available is expanding, these are kept in grid_presets.txt
+* a Python command line implementation with a finite grid, random initial configuration and 1 preset
+  * v1_cli and v1.1d_presets are the only Command line interface versions, both located in depreciated/
+  * run with ```python3 conway_v1.1d_presets.py``` on Windows or ```python3 conway_v1.1d_presets.py```
