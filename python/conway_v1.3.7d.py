@@ -136,7 +136,7 @@ def setupWindow( window_size ) :
   icon = pygame.image.load( path.join( 'img', 'full_cell_original.png' ) )
   pygame.display.set_icon( icon )
   pygame.display.set_caption( 'game of life' )
-  screen = pygame.display.set_mode( window_size, pygame.FULLSCREEN )
+  screen = pygame.display.set_mode( window_size )
 
   # Make screen white
   screen.fill( [ 255, 255, 255 ] )
@@ -163,7 +163,7 @@ def loadAssets( cell_size, palette ) :
   # random_button = pygame.image.load( 'random_button.png' )
 
   # Load theme and select sound
-  theme = pygame.mixer.music.load( 'generated_theme_1.ogg' )
+  theme = pygame.mixer.music.load( 'caliope_theme.mp3' )
   cell_select = pygame.mixer.Sound( 'cell_select_1.ogg' )
   return full_cell, empty_cell, cursor, theme, cell_select
 #--------------------------------------------------
