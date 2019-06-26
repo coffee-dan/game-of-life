@@ -4,6 +4,7 @@ import copy
 import random
 import math
 from PIL import Image
+from os import path
 #--------------------------------------------------
 pygame.init()
 GRID_SIZE = 100
@@ -13,11 +14,11 @@ CELL_SIZE = int( width / GRID_SIZE )
 
 # dynamic asset resizing
 # full cell
-image = Image.open('full_cell_original.png')
+image = Image.open( path.join( '..', 'img', 'full_cell_original.png' ) )
 new_image = image.resize( ( CELL_SIZE, CELL_SIZE ) )
 new_image.save('full_cell_current.png')
 # empty cell
-image = Image.open('empty_cell_original.png')
+image = Image.open( path.join( '..', 'img', 'empty_cell_original.png' ) )
 new_image = image.resize( ( CELL_SIZE, CELL_SIZE ) )
 new_image.save('empty_cell_current.png')
 
@@ -26,8 +27,8 @@ new_image.save('empty_cell_current.png')
 # empty_cell = pygame.image.load( 'empty_cell_' + str( CELL_SIZE ) + '.png' )
 full_cell = pygame.image.load( 'full_cell_current.png' )
 empty_cell = pygame.image.load( 'empty_cell_current.png' )
-cursor = pygame.image.load( 'dan_cursor.png' )
-random_button = pygame.image.load( 'random_button.png' )
+cursor = pygame.image.load( path.join( '..', 'img', 'dan_cursor.png' ) )
+random_button = pygame.image.load( path.join( '..', 'img', 'random_button.png' ) )
 
 #--------------------------------------------------
 def tick( c_grid ) :

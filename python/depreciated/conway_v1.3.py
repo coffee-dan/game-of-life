@@ -2,6 +2,7 @@ import sys, pygame
 import copy
 import random
 import math
+from os import path
 #--------------------------------------------------
 pygame.init()
 GRID_SIZE = 100
@@ -10,10 +11,10 @@ size = width, height = 700, 700
 CELL_SIZE = width / GRID_SIZE
 
 #gui assets
-full_cell = pygame.image.load( 'full_cell_7.png' )
-empty_cell = pygame.image.load( 'empty_cell_7.png' )
-cursor = pygame.image.load( 'dan_cursor.png' )
-random_button = pygame.image.load( 'random_button.png' )
+full_cell = pygame.image.load( path.join( '..', 'img', 'full_cell_7.png' ) )
+empty_cell = pygame.image.load( path.join( '..', 'img', 'empty_cell_7.png' ) )
+cursor = pygame.image.load( path.join( '..', 'img', 'dan_cursor.png' ) )
+random_button = pygame.image.load( path.join( '..', 'img', 'random_button.png' ) )
 
 #window setup
 pygame.display.set_icon( full_cell )

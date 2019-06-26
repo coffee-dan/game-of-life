@@ -1,6 +1,7 @@
 import sys, pygame
 import copy
 import random
+from os import path
 #--------------------------------------------------
 pygame.init()
 GRID_SIZE = 10
@@ -8,8 +9,8 @@ size = width, height = 640, 640
 screen = pygame.display.set_mode(size)
 
 #gui grid
-full_cell = pygame.image.load("full_cell.png")
-empty_cell = pygame.image.load("empty_cell.png")
+full_cell = pygame.image.load( path.join( '..', 'img', 'full_cell.png' ) )
+empty_cell = pygame.image.load( path.join( '..', 'img', 'empty_cell.png' ) )
 #--------------------------------------------------
 def tick( grid, n ) :
   updatedGrid = copy.deepcopy( grid )

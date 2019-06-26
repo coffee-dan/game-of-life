@@ -1,16 +1,17 @@
 import sys, pygame
 import copy
 import random
+from os import path
 #--------------------------------------------------
 pygame.init()
 GRID_SIZE = 10
 size = width, height = 640, 640
 
 #gui assets
-full_cell = pygame.image.load("full_cell.png")
-empty_cell = pygame.image.load("empty_cell.png")
-cursor = pygame.image.load("dan_cursor.png")
-random_button = pygame.image.load("random_button.png")
+full_cell = pygame.image.load( path.join( '..', 'img', 'full_cell.png' ) )
+empty_cell = pygame.image.load( path.join( '..', 'img', 'empty_cell.png' ) )
+cursor = pygame.image.load( path.join( '..', 'img', 'dan_cursor.png' ) )
+random_button = pygame.image.load( path.join( '..', 'img', 'random_button.png' ) )
 #window setup
 pygame.display.set_icon(full_cell)
 pygame.display.set_caption('game of life')

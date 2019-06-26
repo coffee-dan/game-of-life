@@ -130,7 +130,7 @@ def menu() :
 #--------------------------------------------------
 def setupWindow( window_size ) :
   #window setup
-  icon = pygame.image.load( 'full_cell_original.png' )
+  icon = pygame.image.load( '../full_cell_original.png' )
   pygame.display.set_icon( icon )
   pygame.display.set_caption( 'game of life' )
   screen = pygame.display.set_mode( window_size, pygame.FULLSCREEN )
@@ -147,18 +147,18 @@ def loadAssets( cell_size, palette ) :
   #  Dynamic asset resizing - Open default cell design as PIL Image, 
   #   resize it, save it as new .png file, load as pygame.image
   # Resize full cell design
-  image = Image.open( 'full_cell_' + palette + '.png' )
+  image = Image.open( '../full_cell_' + palette + '.png' )
   new_image = image.resize( ( cell_size, cell_size ) )
   new_image.save( 'full_cell_current.png' )
   # Resize empty cell design
-  image = Image.open( 'empty_cell_' + palette + '.png' )
+  image = Image.open( '../empty_cell_' + palette + '.png' )
   new_image = image.resize( ( cell_size, cell_size ) )
   new_image.save( 'empty_cell_current.png' )
 
   # Load in resized designs for use
   full_cell = pygame.image.load( 'full_cell_current.png' )
   empty_cell = pygame.image.load( 'empty_cell_current.png' )
-  cursor = pygame.image.load( 'dan_cursor.png' )
+  cursor = pygame.image.load( '../dan_cursor.png' )
   #  Random button unused
   # random_button = pygame.image.load( 'random_button.png' )
   return full_cell, empty_cell, cursor

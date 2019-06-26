@@ -3,6 +3,7 @@ import pygame
 import copy
 import random
 import math
+from os import path
 #--------------------------------------------------
 pygame.init()
 GRID_SIZE = 100
@@ -11,10 +12,10 @@ size = width, height = 700, 700
 CELL_SIZE = int( width / GRID_SIZE )
 
 # assets
-full_cell = pygame.image.load( 'full_cell_' + str( CELL_SIZE ) + '.png' )
-empty_cell = pygame.image.load( 'empty_cell_' + str( CELL_SIZE ) + '.png' )
-cursor = pygame.image.load( 'dan_cursor.png' )
-random_button = pygame.image.load( 'random_button.png' )
+full_cell = pygame.image.load( path.join( '..', 'img', 'full_cell_' + str( CELL_SIZE ) + '.png' ) )
+empty_cell = pygame.image.load( path.join( '..', 'img', 'empty_cell_' + str( CELL_SIZE ) + '.png' ) )
+cursor = pygame.image.load( path.join( '..', 'img', 'dan_cursor.png' ) )
+random_button = pygame.image.load( path.join( '..', 'img', 'random_button.png' ) )
 
 #--------------------------------------------------
 def generation( c_grid ) :

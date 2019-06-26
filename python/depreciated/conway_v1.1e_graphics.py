@@ -3,6 +3,7 @@ import copy
 pygame.init()
 import time
 import random
+from os import path
 #------------------------------------#
 # how to run: python3 conway.py <size of grid> <number of iterations>
 #------------------------------------#
@@ -68,8 +69,8 @@ screen = pygame.display.set_mode(size)
 
 
 #gui grid
-full_cell = pygame.image.load("full_cell.png")
-empty_cell = pygame.image.load("empty_cell.png")
+full_cell = pygame.image.load( path.join('..', 'img', 'full_cell.png') )
+empty_cell = pygame.image.load( path.join('..', 'img', 'empty_cell.png') )
 
 gui_grid = []
 for i in range(10):

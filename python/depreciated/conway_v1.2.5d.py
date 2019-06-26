@@ -3,6 +3,7 @@ import copy
 import random
 import math
 import pprint
+from os import path
 #--------------------------------------------------
 pygame.init()
 GRID_SIZE = 10
@@ -10,8 +11,8 @@ size = width, height = 640, 640
 screen = pygame.display.set_mode(size)
 
 #gui grid
-full_cell = pygame.image.load("full_cell.png")
-empty_cell = pygame.image.load("empty_cell.png")
+full_cell = pygame.image.load( path.join( '..', 'img', 'full_cell.png' ) )
+empty_cell = pygame.image.load( path.join( '..', 'img', 'empty_cell.png' ) )
 #--------------------------------------------------
 def tick( grid, n ) :
   updatedGrid = copy.deepcopy( grid )
@@ -87,7 +88,7 @@ def debugGrid() :
 #--------------------------------------------------
 # Presets
 def loadPreset( choice ) :
-  presets_file = open( "grid_presets.txt" )
+  presets_file = open( path.join( '..', 'grid_presets.txt' ) )
   for i in range( 1, choice ) :
     preset = str( presets_file.readline() )
       

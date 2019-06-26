@@ -4,6 +4,7 @@ import copy
 import random
 import math
 from PIL import Image
+from os import path
 #--------------------------------------------------
 pygame.init()
 GRID_SIZE = 100
@@ -15,18 +16,18 @@ CELL_SIZE = int( SHORT_SIDE / GRID_SIZE )
 #  Dynamic asset resizing - Open default cell design as PIL Image, 
 #   resize it, save it as new .png file, load as pygame.image
 # Resize full cell design
-image = Image.open( 'full_cell_original.png' )
+image = Image.open( path.join( '..', 'img', 'full_cell_original.png' ) )
 new_image = image.resize( ( CELL_SIZE, CELL_SIZE ) )
 new_image.save( 'full_cell_current.png' )
 # Resize empty cell design
-image = Image.open( 'empty_cell_original.png' )
+image = Image.open( path.join( '..', 'img', 'empty_cell_original.png' ) )
 new_image = image.resize( ( CELL_SIZE, CELL_SIZE ) )
 new_image.save( 'empty_cell_current.png' )
 
 # Load in resized designs for use
 full_cell = pygame.image.load( 'full_cell_current.png' )
 empty_cell = pygame.image.load( 'empty_cell_current.png' )
-cursor = pygame.image.load( 'dan_cursor.png' )
+cursor = pygame.image.load( path.join( '..', 'img', 'dan_cursor.png' ) )
 #  Random button unused
 # random_button = pygame.image.load( 'random_button.png' )
 
