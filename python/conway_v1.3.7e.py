@@ -7,7 +7,7 @@ from PIL import Image
 from os import path
 #--------------------------------------------------
 
-NUM_OF_CELLS = 50
+NUM_OF_CELLS = 25
 
 #--------------------------------------------------
 def generation( c_grid ) :
@@ -262,6 +262,11 @@ def loadPresets( button, window_size ) :
 #--------------------------------------------------
 
 def printButtons( screen, v_button_grid, button, font, preset_entries, ui_pages) :
+  screen_size = screen.get_size()
+  title_font = pygame.font.Font(None, int(screen_size[1] * 1/5) )
+  title_rect = pygame.Rect(0, 0, 0, 0)
+  title_name_render = title_font.render( 'GAME OF LIFE' , True, [0, 0, 0], None )
+  screen.blit( title_name_render, title_rect )
   for y in range( 3 ):
     for x in range( 3 ):
       # render button
@@ -271,7 +276,7 @@ def printButtons( screen, v_button_grid, button, font, preset_entries, ui_pages)
       # render preset name
       preset_name_render = font.render( present_name , True, [0, 0, 0], None )
       screen.blit( preset_name_render, v_button_grid[x][y].move( 0, 0) )
-      print(type(v_button_grid[x][y]))
+      # print(type(v_button_grid[x][y]))
   # print(preset_entries)    
       # print(preset_entries)
       # print(v_button_grid[0][x][y])
@@ -305,7 +310,7 @@ def main() :
   cell_size = int( short_side / NUM_OF_CELLS )
 
   # Load assets according to specified palette
-  full_cell, empty_cell, cursor, theme, cell_select = loadAssets( cell_size, 'gameboy' )
+  full_cell, empty_cell, cursor, theme, cell_select = loadAssets( cell_size, 'original' )
 
   # Create empty grid of size NUM_OF_CELLS for display
   v_grid = [ [ 0 ] * NUM_OF_CELLS for _ in range( NUM_OF_CELLS ) ]
@@ -357,7 +362,10 @@ def main() :
     # print( clock.get_fps() )
 
     # Clear screen with background grey
-    screen.fill( [ 15, 56, 15 ] )
+    if not in_menu : 
+      screen.fill( [ 15, 56, 15 ] )
+    else :
+      screen.fill( [ 255, 255, 255 ] )
 
     # Display visual grid based on computational grid
     if not in_menu :
@@ -375,7 +383,6 @@ def main() :
     
     # loop song every 30 seconds
     if pygame.mixer.music.get_pos() > 29999:
-      print('looping')
       pygame.mixer.music.play()
 
     # Event watchdog
@@ -444,7 +451,6 @@ def main() :
                   preset_selected_grid_l[x][y] = preset_selected_grid_t[x][y]
 
               # set grid to preset and start simulation
-              print(preset_selected)
               c_grid = preset_selected_grid_l
               in_menu = False
 
