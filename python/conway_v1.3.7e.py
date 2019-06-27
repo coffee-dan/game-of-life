@@ -261,10 +261,25 @@ def loadPresets( button, window_size ) :
 
 #--------------------------------------------------
 
-def printButtons( screen, v_button_grid, button) :
+def printButtons( screen, v_button_grid, button, font, preset_entries, ui_pages) :
   for y in range( 3 ):
     for x in range( 3 ):
-        screen.blit( button, v_button_grid[x][y] )
+      # render button
+      screen.blit( button, v_button_grid[x][y] )
+      present_name = ui_pages[0][x][y]
+
+      # render preset name
+      preset_name_render = font.render( present_name , True, [0, 0, 0], None )
+      screen.blit( preset_name_render, v_button_grid[x][y].move( 0, 0) )
+      print(type(v_button_grid[x][y]))
+  # print(preset_entries)    
+      # print(preset_entries)
+      # print(v_button_grid[0][x][y])
+  # print(ui_pages)
+      # print( preset_entries[ ui_pages[x][y] ])
+  # print(ui_pages[0])
+
+
 
 #--------------------------------------------------
 
@@ -330,6 +345,10 @@ def main() :
 
   in_menu = True
   game_loop = True
+
+  font = pygame.font.Font(None, int (button_size * .25) )
+
+
   while game_loop:
 
     # set fps
@@ -344,11 +363,16 @@ def main() :
     if not in_menu :
       printGrid( screen, c_grid, v_grid, full_cell, empty_cell )
     else :
-      printButtons( screen, v_button_grid, button )
+      printButtons( screen, v_button_grid, button, font, preset_entries, ui_pages)
+
+    # screen.blit(s, button.get_rect())
 
     # Update entire window
+    
     pygame.display.flip()
 
+    # font 
+    
     # loop song every 30 seconds
     if pygame.mixer.music.get_pos() > 29999:
       print('looping')
