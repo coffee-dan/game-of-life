@@ -1,4 +1,5 @@
 import pygame
+import pygame.freetype
 import sys
 import math
 from random import randint
@@ -7,7 +8,7 @@ from PIL import Image
 from os import path
 #--------------------------------------------------
 
-NUM_OF_CELLS = 25
+NUM_OF_CELLS = 50
 
 #--------------------------------------------------
 def generation( c_grid ) :
@@ -59,6 +60,12 @@ def randomGrid() :
     for x in range( 1, NUM_OF_CELLS+1 ) :
       c_grid[ x ][ y ] = randint( 0, 1 )
   return c_grid
+
+def blankGrid() :
+  # Create empty grid full of 0's
+  c_grid = [ [ 0 ] * ( NUM_OF_CELLS+2 ) for _ in range( NUM_OF_CELLS+2 ) ]
+  return c_grid
+  
 #--------------------------------------------------
 def loadPreset( choice ) :
   # Load in all presets as list
@@ -164,7 +171,8 @@ def loadAssets( cell_size, palette ) :
 
   # Load theme and select sound
   theme = pygame.mixer.music.load( 'caliope_theme.mp3' )
-  cell_select = pygame.mixer.Sound( 'cell_select_1.ogg' )
+  cell_select = pygame.mixer.Sound( 'cell_select_2.ogg' )
+  cell_select.set_volume(1)
   return full_cell, empty_cell, cursor, theme, cell_select
 #--------------------------------------------------
 
@@ -263,10 +271,15 @@ def loadPresets( button, window_size ) :
 
 def printButtons( screen, v_button_grid, button, font, preset_entries, ui_pages) :
   screen_size = screen.get_size()
-  title_font = pygame.font.Font(None, int(screen_size[1] * 1/5) )
-  title_rect = pygame.Rect(0, 0, 0, 0)
-  title_name_render = title_font.render( 'GAME OF LIFE' , True, [0, 0, 0], None )
-  screen.blit( title_name_render, title_rect )
+  title_render = pygame.freetype.Font( path.join( 'fonts' , 'POLYA.otf' ), int( screen_size[0] * 1/6.45 ) )
+
+  # title_font.underline()
+  # title_name_render = title_font.render( 'GAME OF LIFE' , True, [0, 0, 0], None )
+  title_size = ( int( screen_size[0] * 1/10 ) , int (screen_size[1] * .25) )
+  title_position = ( ( int( screen_size[0] * .5 ) - int(title_size[0] * 3.5 ) ), 0 ) 
+  title_render.render_to(screen, title_position, 'GAME OF LIFE', [254,127,156], None, pygame.freetype.STYLE_UNDERLINE, 0, size=title_size )
+
+  # screen.blit( title_name_render, title_rect )
   for y in range( 3 ):
     for x in range( 3 ):
       # render button
@@ -276,14 +289,7 @@ def printButtons( screen, v_button_grid, button, font, preset_entries, ui_pages)
       # render preset name
       preset_name_render = font.render( present_name , True, [0, 0, 0], None )
       screen.blit( preset_name_render, v_button_grid[x][y].move( 0, 0) )
-      # print(type(v_button_grid[x][y]))
-  # print(preset_entries)    
-      # print(preset_entries)
-      # print(v_button_grid[0][x][y])
-  # print(ui_pages)
-      # print( preset_entries[ ui_pages[x][y] ])
-  # print(ui_pages[0])
-
+      # title_font.render_to(screen, v_button_grid[x][y], present_name, [0,0,0], None, 0, size=int( 25 ) )
 
 
 #--------------------------------------------------
@@ -300,9 +306,11 @@ def checkButtonClick(clicked_pos, v_button_grid, preset_entries, ui_pages, butto
 
 def main() :
   pygame.init()
+  pygame.freetype.init()
+
 
   # Dimensions of window
-  window_size = window_width, window_height = 800, 800
+  window_size = window_width, window_height = 1600, 800
   screen = setupWindow( window_size )
   
   # Compute size of cell in pixels for later usage
@@ -325,8 +333,8 @@ def main() :
     for y in range( NUM_OF_CELLS ):
       v_grid[ x ][ y ] = empty_cell.get_rect().move( ( x * cell_size ) + horizontal_offset, ( y * cell_size ) + vertical_offset )
   
-  # Default grid is random
-  c_grid = randomGrid()
+  # starting grid is blank
+  c_grid = blankGrid()
 
   # new pause mode
   clock = pygame.time.Clock()
@@ -350,9 +358,7 @@ def main() :
 
   in_menu = True
   game_loop = True
-
-  font = pygame.font.Font(None, int (button_size * .25) )
-
+  font = pygame.font.Font( path.join( 'fonts' , 'Roboto-Regular.ttf' ), int (button_size * .25) )
 
   while game_loop:
 
@@ -368,9 +374,8 @@ def main() :
       screen.fill( [ 255, 255, 255 ] )
 
     # Display visual grid based on computational grid
-    if not in_menu :
-      printGrid( screen, c_grid, v_grid, full_cell, empty_cell )
-    else :
+    printGrid( screen, c_grid, v_grid, full_cell, empty_cell )
+    if in_menu:
       printButtons( screen, v_button_grid, button, font, preset_entries, ui_pages)
 
     # screen.blit(s, button.get_rect())
@@ -395,7 +400,9 @@ def main() :
         if event.key == pygame.K_ESCAPE :
           sys.exit()
         elif event.key == pygame.K_TAB :
-          in_menu = not in_menu
+          c_grid = blankGrid()
+          in_menu = True
+
         elif event.key == pygame.K_p :
           pause_game = not pause_game
         elif event.key == pygame.K_c :
@@ -443,6 +450,7 @@ def main() :
             # check for button click
             preset_selected = checkButtonClick(clicked_pos, v_button_grid, preset_entries, ui_pages, button_size)
             if preset_selected != '':
+              cell_select.play()
               # convert tuple to list
               preset_selected_grid_t = preset_entries[preset_selected]
               preset_selected_grid_l = [ [ None ] * len( preset_selected_grid_t[0] ) for _ in range( len( preset_selected_grid_t ) ) ]
@@ -473,7 +481,7 @@ def main() :
     # End of event watchdog------------------------
 
     # Execute generation(...) if game is not paused
-    if pause_game == False:
+    if pause_game == False and in_menu == False:
       c_grid = deepcopy( generation( c_grid ) )
       # print( 'generation' )
 
