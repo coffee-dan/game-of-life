@@ -62,7 +62,7 @@ def randomGrid() :
 #--------------------------------------------------
 def loadPreset( choice ) :
   # Load in all presets as list
-  with open( 'grid_presets.txt' ) as presets_file :
+  with open( path.join( '..', 'grid_presets.txt' ) ) as presets_file :
     presets = presets_file.read().split( '\n' )
 
   # Error check
@@ -133,7 +133,7 @@ def menu() :
 #--------------------------------------------------
 def setupWindow( window_size ) :
   #window setup
-  icon = pygame.image.load( path.join( 'img', 'full_cell_original.png' ) )
+  icon = pygame.image.load( path.join( '..', 'img', 'full_cell_original.png' ) )
   pygame.display.set_icon( icon )
   pygame.display.set_caption( 'game of life' )
   screen = pygame.display.set_mode( window_size )
@@ -147,24 +147,24 @@ def loadAssets( cell_size, palette ) :
   #  Dynamic asset resizing - Open default cell design as PIL Image, 
   #   resize it, save it as new .png file, load as pygame.image
   # Resize full cell design
-  image = Image.open( path.join( 'img', 'full_cell_' + palette + '.png' ) )
+  image = Image.open( path.join( '..', 'img', 'full_cell_' + palette + '.png' ) )
   new_image = image.resize( ( cell_size, cell_size ) )
-  new_image.save( 'full_cell_current.png' )
+  new_image.save( path.join( 'tmp', 'full_cell_current.png' ) )
   # Resize empty cell design
-  image = Image.open( path.join( 'img', 'empty_cell_' + palette + '.png' ) )
+  image = Image.open( path.join( '..', 'img', 'empty_cell_' + palette + '.png' ) )
   new_image = image.resize( ( cell_size, cell_size ) )
-  new_image.save( 'empty_cell_current.png' )
+  new_image.save( path.join( 'tmp', 'empty_cell_current.png' ) )
 
   # Load in resized designs for use
-  full_cell = pygame.image.load( 'full_cell_current.png' )
-  empty_cell = pygame.image.load( 'empty_cell_current.png' )
-  cursor = pygame.image.load( path.join( 'img', 'dan_cursor.png' ) )
+  full_cell = pygame.image.load( path.join( 'tmp', 'full_cell_current.png' ) )
+  empty_cell = pygame.image.load( path.join( 'tmp', 'empty_cell_current.png' ) )
+  cursor = pygame.image.load( path.join( '..', 'img', 'dan_cursor.png' ) )
   #  Random button unused
   # random_button = pygame.image.load( 'random_button.png' )
 
   # Load theme and select sound
-  theme = pygame.mixer.music.load( 'caliope_theme.mp3' )
-  cell_select = pygame.mixer.Sound( 'cell_select_1.ogg' )
+  theme = pygame.mixer.music.load( path.join( '..', 'caliope_theme.mp3' ) )
+  cell_select = pygame.mixer.Sound( path.join( '..', 'cell_select_1.ogg' ) )
   return full_cell, empty_cell, cursor, theme, cell_select
 #--------------------------------------------------
 def main() :
@@ -216,8 +216,6 @@ def main() :
     # set fps
     clock.tick(30)
 
-    print( clock.get_fps() )
-
     # Clear screen with background grey
     screen.fill( [ 15, 56, 15 ] )
 
@@ -229,7 +227,6 @@ def main() :
 
     # loop song every 30 seconds
     if pygame.mixer.music.get_pos() > 29999:
-      print('looping')
       pygame.mixer.music.play()
 
     # Event watchdog
@@ -303,8 +300,6 @@ def main() :
     # Execute generation(...) if game is not paused
     if pause_game == False:
       c_grid = deepcopy( generation( c_grid ) )
-      print( 'generation' )
-
 #--------------------------------------------------
 if ( __name__ == '__main__' ) :
   main()

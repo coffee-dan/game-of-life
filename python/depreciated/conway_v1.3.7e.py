@@ -69,7 +69,7 @@ def blankGrid() :
 #--------------------------------------------------
 def loadPreset( choice ) :
   # Load in all presets as list
-  with open( 'grid_presets.txt' ) as presets_file :
+  with open( path.join( '..', 'grid_presets.txt' ) ) as presets_file :
     presets = presets_file.read().split( '\n' )
 
   # Error check
@@ -140,7 +140,7 @@ def menu() :
 #--------------------------------------------------
 def setupWindow( window_size ) :
   #window setup
-  icon = pygame.image.load( path.join( 'img', 'full_cell_original.png' ) )
+  icon = pygame.image.load( path.join( '..', 'img', 'full_cell_original.png' ) )
   pygame.display.set_icon( icon )
   pygame.display.set_caption( 'game of life' )
   screen = pygame.display.set_mode( window_size )
@@ -154,24 +154,24 @@ def loadAssets( cell_size, palette ) :
   #  Dynamic asset resizing - Open default cell design as PIL Image, 
   #   resize it, save it as new .png file, load as pygame.image
   # Resize full cell design
-  image = Image.open( path.join( 'img', 'full_cell_' + palette + '.png' ) )
+  image = Image.open( path.join( '..', 'img', 'full_cell_' + palette + '.png' ) )
   new_image = image.resize( ( cell_size, cell_size ) )
-  new_image.save( 'full_cell_current.png' )
+  new_image.save( path.join( 'tmp', 'full_cell_current.png' ) )
   # Resize empty cell design
-  image = Image.open( path.join( 'img', 'empty_cell_' + palette + '.png' ) )
+  image = Image.open( path.join( '..', 'img', 'empty_cell_' + palette + '.png' ) )
   new_image = image.resize( ( cell_size, cell_size ) )
-  new_image.save( 'empty_cell_current.png' )
+  new_image.save( path.join( 'tmp', 'empty_cell_current.png' ) )
 
   # Load in resized designs for use
-  full_cell = pygame.image.load( 'full_cell_current.png' )
-  empty_cell = pygame.image.load( 'empty_cell_current.png' )
-  cursor = pygame.image.load( path.join( 'img', 'dan_cursor.png' ) )
+  full_cell = pygame.image.load( path.join( 'tmp', 'full_cell_current.png' ) )
+  empty_cell = pygame.image.load( path.join( 'tmp', 'empty_cell_current.png' ) )
+  cursor = pygame.image.load( path.join( '..', 'img', 'dan_cursor.png' ) )
   #  Random button unused
   # random_button = pygame.image.load( 'random_button.png' )
 
   # Load theme and select sound
-  theme = pygame.mixer.music.load( 'caliope_theme.mp3' )
-  cell_select = pygame.mixer.Sound( 'cell_select_2.ogg' )
+  theme = pygame.mixer.music.load( path.join( '..', 'caliope_theme.mp3' ) )
+  cell_select = pygame.mixer.Sound( path.join( '..', 'cell_select_2.ogg' ) )
   cell_select.set_volume(1)
   return full_cell, empty_cell, cursor, theme, cell_select
 #--------------------------------------------------
@@ -179,7 +179,7 @@ def loadAssets( cell_size, palette ) :
 def loadPresets( button, window_size ) :
   preset_entries = dict()
 
-  with open( 'grid_presets.txt' ) as presets_file :
+  with open( path.join( '..', 'grid_presets.txt' ) ) as presets_file :
     presets = presets_file.read().split( '\n' )
 
   for item in presets:
@@ -271,7 +271,7 @@ def loadPresets( button, window_size ) :
 
 def printButtons( screen, v_button_grid, button, font, preset_entries, ui_pages) :
   screen_size = screen.get_size()
-  title_render = pygame.freetype.Font( path.join( 'fonts' , 'POLYA.otf' ), int( screen_size[0] * 1/6.45 ) )
+  title_render = pygame.freetype.Font( path.join( '..', 'fonts' , 'POLYA.otf' ), int( screen_size[0] * 1/6.45 ) )
 
   # title_font.underline()
   # title_name_render = title_font.render( 'GAME OF LIFE' , True, [0, 0, 0], None )
@@ -349,16 +349,16 @@ def main() :
   pygame.mixer.music.play()
 
   button_size = int( window_width / (4*2) )
-  image = Image.open( path.join( 'img' , 'full_cell_original.png' ) )
+  image = Image.open( path.join( '..', 'img' , 'full_cell_original.png' ) )
   new_image = image.resize( ( button_size , button_size ) ) 
-  new_image.save( path.join( 'img' , 'button_current.png' ) )
-  button =  pygame.image.load( path.join( 'img' , 'button_current.png' ) )
+  new_image.save( path.join( 'tmp' , 'button_current.png' ) )
+  button =  pygame.image.load( path.join( 'tmp' , 'button_current.png' ) )
 
   preset_entries, ui_pages, v_button_grid = loadPresets(button, window_size)
 
   in_menu = True
   game_loop = True
-  font = pygame.font.Font( path.join( 'fonts' , 'Roboto-Regular.ttf' ), int (button_size * .25) )
+  font = pygame.font.Font( path.join( '..', 'fonts' , 'Roboto-Regular.ttf' ), int (button_size * .25) )
 
   while game_loop:
 
