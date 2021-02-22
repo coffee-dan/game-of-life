@@ -18,3 +18,8 @@ The game is designed around the following simple rules:
 - a Python x PyGame graphical implemtation with a finite bounded grid, random initial configuration and 9 presets
   - run with `py conway.py <preset number>` on Windows or `python3 conway.py <preset number>` on Linux
   - the number of presets available is expanding, these are kept in grid_presets.txt
+
+## Required packages
+
+- pygame
+- pillow ( a fork of PIL )

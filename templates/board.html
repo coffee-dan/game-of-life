@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Home Page{% endblock %}
+{% block content %}
+<h1>Gameboard</h1>
+<div class="gameboard">
+	{% for y in range( NUM_OF_CELLS ) %}
+		<div class="column">
+		{% for x in range( NUM_OF_CELLS ) %}
+			{% with type = "full" if grid[ x ][ y ] == 1 else "empty" %}
+				<p class="{{ type }} cell"></p>
+			{% endwith %}
+		{% endfor %}
+		</div>
+	{% endfor %}
+</div>
+{% endblock %}

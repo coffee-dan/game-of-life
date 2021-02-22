@@ -7,6 +7,17 @@ from PIL import Image
 from sys import exit
 from os import path
 #--------------------------------------------------
+# Flask Setup
+
+from flask import Flask, render_template
+
+app = Flask(__name__)
+
+@app.route('/')
+def home() :
+	return render_template('board.html', NUM_OF_CELLS=50, grid=randomGrid())
+
+#--------------------------------------------------
 
 NUM_OF_CELLS = 50
 
@@ -230,183 +241,189 @@ def checkButtonClick( clicked_pos, v_button_grid, ui_pages, button_size ):
 
   return preset_selected
 #--------------------------------------------------
-def main() :
-  pygame.init()
-  pygame.freetype.init()
+def pygame_main() :
+	pygame.init()
+	pygame.freetype.init()
 
-  # Dimensions of window
-  #  Emmanuel screen dimensions
-  #  window_size = window_width, window_height = 1600, 800
-  #  Dan screen dimensions
-  window_size = window_width, window_height = 1366, 768
-  screen = setupWindow( window_size )
-  
-  # Compute size of cell in pixels for later usage
-  short_side = min( window_width, window_height )
-  cell_size = int( short_side / NUM_OF_CELLS )
+	# Dimensions of window
+	#  Emmanuel screen dimensions
+	#  window_size = window_width, window_height = 1600, 800
+	#  Dan screen dimensions
+	window_size = window_width, window_height = 1366, 768
+	screen = setupWindow( window_size )
+	
+	# Compute size of cell in pixels for later usage
+	short_side = min( window_width, window_height )
+	cell_size = int( short_side / NUM_OF_CELLS )
 
-  # Load assets according to specified palette
-  full_cell, empty_cell, cursor, theme, cell_select = loadAssets( cell_size, 'original' )
+	# Load assets according to specified palette
+	full_cell, empty_cell, cursor, theme, cell_select = loadAssets( cell_size, 'original' )
 
-  # Create empty grid of size NUM_OF_CELLS for display
-  v_grid = [ [ 0 ] * NUM_OF_CELLS for _ in range( NUM_OF_CELLS ) ]
+	# Create empty grid of size NUM_OF_CELLS for display
+	v_grid = [ [ 0 ] * NUM_OF_CELLS for _ in range( NUM_OF_CELLS ) ]
 
-  # Compute offsets to print grid in the center of the window
-  grid_size = NUM_OF_CELLS * cell_size # Side length of grid
-  horizontal_offset = ( window_width - grid_size )/2
-  vertical_offset = ( window_height - grid_size )/2
+	# Compute offsets to print grid in the center of the window
+	grid_size = NUM_OF_CELLS * cell_size # Side length of grid
+	horizontal_offset = ( window_width - grid_size )/2
+	vertical_offset = ( window_height - grid_size )/2
 
-  # Fill v_grid with coordinates of each cell
-  for x in range( NUM_OF_CELLS ):
-    for y in range( NUM_OF_CELLS ):
-      v_grid[ x ][ y ] = empty_cell.get_rect().move( ( x * cell_size ) + horizontal_offset, ( y * cell_size ) + vertical_offset )
-  
-  # starting grid is blank
-  c_grid = blankGrid()
+	# Fill v_grid with coordinates of each cell
+	for x in range( NUM_OF_CELLS ):
+		for y in range( NUM_OF_CELLS ):
+			v_grid[ x ][ y ] = empty_cell.get_rect().move( ( x * cell_size ) + horizontal_offset, ( y * cell_size ) + vertical_offset )
+	
+	# starting grid is blank
+	c_grid = blankGrid()
 
-  # new pause mode
-  clock = pygame.time.Clock()
-  paused = False
+	# new pause mode
+	clock = pygame.time.Clock()
+	paused = False
 
-  # multiple cell selection
-  cell_selection_dict = dict()
-  cell_selection = False
+	# multiple cell selection
+	cell_selection_dict = dict()
+	cell_selection = False
 
-  # set music to play
-  pygame.mixer.music.set_volume(.25) 
-  pygame.mixer.music.play()
+	# set music to play
+	pygame.mixer.music.set_volume(.25) 
+	pygame.mixer.music.play()
 
-  # User interface setup
-  button_size = int( window_width/( 4*2 ) )
-  image = Image.open( path.join( 'img' , 'full_cell_original.png' ) )
-  new_image = image.resize( ( button_size , button_size ) ) 
-  new_image.save( path.join( 'img' , 'button_current.png' ) )
-  button =  pygame.image.load( path.join( 'img' , 'button_current.png' ) )
-  # Loading in fonts
-  font = pygame.font.Font( path.join( 'fonts' , 'Roboto-Regular.ttf' ), int( button_size*0.25 ) )
+	# User interface setup
+	button_size = int( window_width/( 4*2 ) )
+	image = Image.open( path.join( 'img' , 'full_cell_original.png' ) )
+	new_image = image.resize( ( button_size , button_size ) ) 
+	new_image.save( path.join( 'img' , 'button_current.png' ) )
+	button =  pygame.image.load( path.join( 'img' , 'button_current.png' ) )
+	# Loading in fonts
+	font = pygame.font.Font( path.join( 'fonts' , 'Roboto-Regular.ttf' ), int( button_size*0.25 ) )
 
-  preset_entries, ui_pages, v_button_grid = loadPresets( button, window_size )
+	preset_entries, ui_pages, v_button_grid = loadPresets( button, window_size )
 
-  # Game starts in the menu
-  in_menu = True
+	# Game starts in the menu
+	in_menu = True
 
-  # game_running boolean exists for readability
-  game_running = True
-  while game_running :
+	# game_running boolean exists for readability
+	game_running = True
+	while game_running :
 
-    # set fps
-    clock.tick(30)
+		# set fps
+		clock.tick(30)
 
-    # Clear screen with background grey
-    if not in_menu : 
-      screen.fill( [ 15, 56, 15 ] )
-      # Display visual grid based on computational grid
-      printGrid( screen, c_grid, v_grid, full_cell, empty_cell )
-    else :
-      screen.fill( [ 255, 255, 255 ] )
-      printButtons( screen, v_button_grid, button, font, preset_entries, ui_pages)
+		# Clear screen with background grey
+		if not in_menu : 
+			screen.fill( [ 15, 56, 15 ] )
+			# Display visual grid based on computational grid
+			printGrid( screen, c_grid, v_grid, full_cell, empty_cell )
+		else :
+			screen.fill( [ 255, 255, 255 ] )
+			printButtons( screen, v_button_grid, button, font, preset_entries, ui_pages)
 
-    # screen.blit(s, button.get_rect())
+		# screen.blit(s, button.get_rect())
 
-    # Update entire window
-    pygame.display.flip()
-    
-    # loop song every 30 seconds
-    if pygame.mixer.music.get_pos() > 29999 :
-      pygame.mixer.music.play()
+		# Update entire window
+		pygame.display.flip()
+		
+		# loop song every 30 seconds
+		if pygame.mixer.music.get_pos() > 29999 :
+			pygame.mixer.music.play()
 
-    # Event watchdog
-    for event in pygame.event.get() :
-      # Watch for exit button press
-      if event.type == pygame.QUIT: exit()
+		# Event watchdog
+		for event in pygame.event.get() :
+			# Watch for exit button press
+			if event.type == pygame.QUIT: exit()
 
-      # Watch for esc key press
-      if event.type == pygame.KEYDOWN :
-        if event.key == pygame.K_ESCAPE :
-          exit()
-        elif event.key == pygame.K_TAB :
-          c_grid = blankGrid()
-          in_menu = True
+			# Watch for esc key press
+			if event.type == pygame.KEYDOWN :
+				if event.key == pygame.K_ESCAPE :
+					exit()
+				elif event.key == pygame.K_TAB :
+					c_grid = blankGrid()
+					in_menu = True
 
-        elif event.key == pygame.K_p :
-          paused = not paused
-        elif event.key == pygame.K_c :
-          #clear grid
-          for y in range( NUM_OF_CELLS+1 ) :
-            for x in range( NUM_OF_CELLS+1 ) :
-              c_grid[ x ][ y ] = 0 
-      
-      # Watch for mouse movement
-      if event.type == pygame.MOUSEMOTION :
-        if not in_menu :
-          if cell_selection :
-            clicked_pos = pygame.mouse.get_pos()
-            cell_clicked = int( ( clicked_pos[ 0 ] - horizontal_offset ) / cell_size )+1, int( ( clicked_pos[ 1 ] - vertical_offset ) / cell_size )+1
-    
-            # update if valid position and coordinate is not already in dictionary
-            if ( cell_clicked[ 1 ] <= NUM_OF_CELLS and cell_clicked[ 0 ] <= NUM_OF_CELLS ) and ( cell_clicked not in cell_selection_dict.keys() ):
-              # play sound effect when new entry is added
-              cell_select.play()
-              cell_selection_dict.update({ cell_clicked : c_grid[ cell_clicked[ 0 ] ][ cell_clicked[ 1 ] ] })
+				elif event.key == pygame.K_p :
+					paused = not paused
+				elif event.key == pygame.K_c :
+					#clear grid
+					for y in range( NUM_OF_CELLS+1 ) :
+						for x in range( NUM_OF_CELLS+1 ) :
+							c_grid[ x ][ y ] = 0 
+			
+			# Watch for mouse movement
+			if event.type == pygame.MOUSEMOTION :
+				if not in_menu :
+					if cell_selection :
+						clicked_pos = pygame.mouse.get_pos()
+						cell_clicked = int( ( clicked_pos[ 0 ] - horizontal_offset ) / cell_size )+1, int( ( clicked_pos[ 1 ] - vertical_offset ) / cell_size )+1
+		
+						# update if valid position and coordinate is not already in dictionary
+						if ( cell_clicked[ 1 ] <= NUM_OF_CELLS and cell_clicked[ 0 ] <= NUM_OF_CELLS ) and ( cell_clicked not in cell_selection_dict.keys() ):
+							# play sound effect when new entry is added
+							cell_select.play()
+							cell_selection_dict.update({ cell_clicked : c_grid[ cell_clicked[ 0 ] ][ cell_clicked[ 1 ] ] })
 
-            # invert cell state to indicate selection
-            for coordinate in cell_selection_dict.keys() :
-              if c_grid[ coordinate[ 0 ] ][ coordinate[ 1 ] ] == 1 :
-                c_grid[ coordinate[ 0 ] ][ coordinate[ 1 ] ] = 0
-              else:
-                c_grid[ coordinate[ 0 ] ][ coordinate[ 1 ] ] = 1
+						# invert cell state to indicate selection
+						for coordinate in cell_selection_dict.keys() :
+							if c_grid[ coordinate[ 0 ] ][ coordinate[ 1 ] ] == 1 :
+								c_grid[ coordinate[ 0 ] ][ coordinate[ 1 ] ] = 0
+							else:
+								c_grid[ coordinate[ 0 ] ][ coordinate[ 1 ] ] = 1
 
-      # Watch for mouse clicks
-      if event.type == pygame.MOUSEBUTTONDOWN :
-        if not in_menu :
-          cell_selection = True
-          cell_select.play()
-          clicked_pos = pygame.mouse.get_pos()
-          # Determine which cell was clicked if one was clicked
-          cell_clicked = int( ( clicked_pos[ 0 ] - horizontal_offset ) / cell_size )+1, int( ( clicked_pos[ 1 ] - vertical_offset ) / cell_size )+1
-          
-          if( cell_clicked[ 1 ] <= NUM_OF_CELLS and cell_clicked[ 0 ] <= NUM_OF_CELLS ) :
-            if c_grid[ cell_clicked[ 0 ] ][ cell_clicked[ 1 ] ] == 1 :
-              c_grid[ cell_clicked[ 0 ] ][ cell_clicked[ 1 ] ] = 0
-            else:
-              c_grid[ cell_clicked[ 0 ] ][ cell_clicked[ 1 ] ] = 1
-        else :
-            clicked_pos = pygame.mouse.get_pos()
-            # check for button click
-            preset_selected = checkButtonClick( clicked_pos, v_button_grid, ui_pages, button_size )
-            if preset_selected != '' :
-              cell_select.play()
-              # convert tuple to list
-              preset_selected_grid_t = preset_entries[ preset_selected ]
-              preset_selected_grid_l = [ [ None ] * len( preset_selected_grid_t[ 0 ] ) for _ in range( len( preset_selected_grid_t ) ) ]
-              for y in range( len( preset_selected_grid_t ) ) :
-                for x in range( len( preset_selected_grid_t[ 0 ] ) ) :
-                  preset_selected_grid_l[ x ][ y ] = preset_selected_grid_t[ x ][ y ]
+			# Watch for mouse clicks
+			if event.type == pygame.MOUSEBUTTONDOWN :
+				if not in_menu :
+					cell_selection = True
+					cell_select.play()
+					clicked_pos = pygame.mouse.get_pos()
+					# Determine which cell was clicked if one was clicked
+					cell_clicked = int( ( clicked_pos[ 0 ] - horizontal_offset ) / cell_size )+1, int( ( clicked_pos[ 1 ] - vertical_offset ) / cell_size )+1
+					
+					if( cell_clicked[ 1 ] <= NUM_OF_CELLS and cell_clicked[ 0 ] <= NUM_OF_CELLS ) :
+						if c_grid[ cell_clicked[ 0 ] ][ cell_clicked[ 1 ] ] == 1 :
+							c_grid[ cell_clicked[ 0 ] ][ cell_clicked[ 1 ] ] = 0
+						else:
+							c_grid[ cell_clicked[ 0 ] ][ cell_clicked[ 1 ] ] = 1
+				else :
+						clicked_pos = pygame.mouse.get_pos()
+						# check for button click
+						preset_selected = checkButtonClick( clicked_pos, v_button_grid, ui_pages, button_size )
+						if preset_selected != '' :
+							cell_select.play()
+							# convert tuple to list
+							preset_selected_grid_t = preset_entries[ preset_selected ]
+							preset_selected_grid_l = [ [ None ] * len( preset_selected_grid_t[ 0 ] ) for _ in range( len( preset_selected_grid_t ) ) ]
+							for y in range( len( preset_selected_grid_t ) ) :
+								for x in range( len( preset_selected_grid_t[ 0 ] ) ) :
+									preset_selected_grid_l[ x ][ y ] = preset_selected_grid_t[ x ][ y ]
 
-              # set grid to preset and start simulation
-              c_grid = preset_selected_grid_l
-              in_menu = False
+							# set grid to preset and start simulation
+							c_grid = preset_selected_grid_l
+							in_menu = False
 
-      # watch for selection end
-      if event.type == pygame.MOUSEBUTTONUP :
-        if not in_menu :
-          for coordinate in cell_selection_dict.keys() :
-            # populate cell 
-            c_grid[ coordinate[ 0 ] ][ coordinate[ 1 ] ] = 1
-            # invert cell state saved
-            # if cell_selection_dict.get( coordinate ) == 1 :
-            #   c_grid[ coordinate[ 0 ] ][ coordinate[ 1 ] ] = 0
-            # else:
-            #   c_grid[ coordinate[ 0 ] ][ coordinate[ 1 ] ] = 1
+			# watch for selection end
+			if event.type == pygame.MOUSEBUTTONUP :
+				if not in_menu :
+					for coordinate in cell_selection_dict.keys() :
+						# populate cell 
+						c_grid[ coordinate[ 0 ] ][ coordinate[ 1 ] ] = 1
+						# invert cell state saved
+						# if cell_selection_dict.get( coordinate ) == 1 :
+						#   c_grid[ coordinate[ 0 ] ][ coordinate[ 1 ] ] = 0
+						# else:
+						#   c_grid[ coordinate[ 0 ] ][ coordinate[ 1 ] ] = 1
 
-          cell_selection_dict.clear()
-          cell_selection = False
-    # End of event watchdog------------------------
+					cell_selection_dict.clear()
+					cell_selection = False
+		# End of event watchdog------------------------
 
-    # Execute generation(...) if game is not paused
-    if paused == False and not in_menu :
-      c_grid = deepcopy( generation( c_grid ) )
+		# Execute generation(...) if game is not paused
+		if paused == False and not in_menu :
+			c_grid = deepcopy( generation( c_grid ) )
+
+
+
+def flask_main():
+	app.run(debug=True)
+
 #--------------------------------------------------
 if ( __name__ == '__main__' ) :
-  main()
+	flask_main()
 #--------------------------------------------------

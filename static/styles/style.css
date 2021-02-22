@@ -1,0 +1,26 @@
+.gameboard {
+	background-color: whitesmoke;
+	display: flex;
+	flex-direction: row;
+	margin-bottom: 16px;
+}
+
+.column {
+	display: inline-block;
+}
+
+.cell {
+	border: 1px solid whitesmoke;
+	background-color: whitesmoke;
+	margin-bottom: 0;
+	min-height: 10px;
+	min-width: 10px;
+}
+
+.empty {
+	background-color: white;
+}
+
+.full {
+	background-color: black;
+}
