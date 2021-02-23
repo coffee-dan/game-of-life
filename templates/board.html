@@ -1,16 +1,20 @@
 {% extends "base.html" %}
 {% block title %}Home Page{% endblock %}
 {% block content %}
-<h1>Gameboard</h1>
-<div class="gameboard">
-	{% for y in range( NUM_OF_CELLS ) %}
-		<div class="column">
-		{% for x in range( NUM_OF_CELLS ) %}
-			{% with type = "full" if grid[ x ][ y ] == 1 else "empty" %}
-				<p class="{{ type }} cell"></p>
-			{% endwith %}
+	<h1>Gameboard</h1>
+	<div class="gameboard">
+		{% for y in range( NUM_OF_CELLS+2 ) %}
+			<div id="_column{{ y }}" class="column">
+			{% for x in range( NUM_OF_CELLS+2 ) %}
+				{% with type = "full" if grid[ x ][ y ] == 1 else "empty" %}
+					<p id="_cell{{ x }}{{ y }}" class="{{ type }} cell"></p>
+				{% endwith %}
+			{% endfor %}
+			</div>
 		{% endfor %}
-		</div>
-	{% endfor %}
-</div>
+	</div>
+
+	<button id="flippe">flippe</button>
+
+	<script src="{{ url_for('static', filename='scripts/generation.js') }}"></script>
 {% endblock %}
