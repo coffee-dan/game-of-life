@@ -7,14 +7,16 @@
 			<div id="_column{{ y }}" class="column">
 			{% for x in range( NUM_OF_CELLS+2 ) %}
 				{% with type = "full" if grid[ x ][ y ] == 1 else "empty" %}
-					<p id="_cell{{ x }}{{ y }}" class="{{ type }} cell"></p>
+					<p id="_cell{{ x }}_{{ y }}" class="{{ type }} cell"></p>
 				{% endwith %}
 			{% endfor %}
 			</div>
 		{% endfor %}
 	</div>
 
+	<button id="generation">generation</button>
 	<button id="flippe">flippe</button>
+	<button id="debug">debug</button>
 
 	<script src="{{ url_for('static', filename='scripts/generation.js') }}"></script>
 {% endblock %}
