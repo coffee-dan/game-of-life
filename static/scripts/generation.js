@@ -1,5 +1,7 @@
 const NUM_OF_CELLS = 50;
 
+// constructs array based on dimensions that are passed in
+// number of params determines number of dimensions
 function createArray(length) {
 	let arr = new Array(length || 0);
 	let i = length;
@@ -32,6 +34,53 @@ function readGrid() {
 	return grid;
 }
 
+// performs one iteration of game of life
+function generation(grid) {
+	// let updated_grid = c_grid;
+	// hacky deep copy
+	let updated_grid = JSON.parse(JSON.stringify(grid));
+
+	// iterate through interactable cells on grid
+	for (let y = 1; y < NUM_OF_CELLS + 1; y++) {
+		for (let x = 1; x < NUM_OF_CELLS + 1; x++) {
+			// compute number of neighbors
+			let neighbors = 0;
+
+			// check if neighbors are alive
+			neighbors += grid[x - 1][y - 1];
+			neighbors += grid[x - 1][y + 1];
+			neighbors += grid[x + 1][y - 1];
+			neighbors += grid[x + 1][y + 1];
+			neighbors += grid[x - 1][y];
+			neighbors += grid[x + 1][y];
+			neighbors += grid[x][y - 1];
+			neighbors += grid[x][y + 1];
+
+			// console.log(neighbors);
+
+			// LIVING CELL
+			if (c_grid[x][y] === 1) {
+				if (neighbors < 2) {
+					// Death by exposure ( <2 neighbors )
+					updated_grid[x][y] = 0;
+				} else if (neighbors > 3) {
+					// Death by overcrowding ( >3 neighbors )
+					updated_grid[x][y] = 0;
+				}
+			}
+			// EMPTY CELL
+			else {
+				if (neighbors === 3) {
+					// New Life
+					updated_grid[x][y] = 1;
+				}
+			}
+		}
+	}
+
+	return updated_grid;
+}
+
 // computational grid
 let c_grid = readGrid();
 // console.log(c_grid);
@@ -40,54 +89,7 @@ let genBtn = document.getElementById("generation");
 genBtn.addEventListener(
 	"click",
 	function () {
-		// let updated_grid = c_grid;
-		// hacky deep copy
-		let updated_grid = JSON.parse(JSON.stringify(c_grid));
-
-		console.log("start generation...");
-		// [ x-1 ][ y-1 ] [  x  ][ y-1 ] [ x+1 ][ y-1 ]
-		// [ x-1 ][  y  ] [  x  ][  y  ] [ x+1 ][  y  ]
-		// [ x-1 ][ y+1 ] [  x  ][ y+1 ] [ x+1 ][ y+1 ]
-
-		for (let y = 1; y < NUM_OF_CELLS + 1; y++) {
-			for (let x = 1; x < NUM_OF_CELLS + 1; x++) {
-				// compute number of neighbors
-				let neighbors = 0;
-
-				// check if neighbors are alive
-				neighbors += c_grid[x - 1][y - 1];
-				neighbors += c_grid[x - 1][y + 1];
-				neighbors += c_grid[x + 1][y - 1];
-				neighbors += c_grid[x + 1][y + 1];
-				neighbors += c_grid[x - 1][y];
-				neighbors += c_grid[x + 1][y];
-				neighbors += c_grid[x][y - 1];
-				neighbors += c_grid[x][y + 1];
-
-				// console.log(neighbors);
-
-				// LIVING CELL
-				if (c_grid[x][y] === 1) {
-					if (neighbors < 2) {
-						// Death by exposure ( <2 neighbors )
-						updated_grid[x][y] = 0;
-					} else if (neighbors > 3) {
-						// Death by overcrowding ( >3 neighbors )
-						updated_grid[x][y] = 0;
-					}
-				}
-				// EMPTY CELL
-				else {
-					if (neighbors === 3) {
-						// New Life
-						updated_grid[x][y] = 1;
-					}
-				}
-			}
-		}
-		console.log("end generation...");
-
-		c_grid = JSON.parse(JSON.stringify(updated_grid));
+		c_grid = generation(c_grid);
 		printGrid(c_grid);
 	},
 	false
@@ -108,40 +110,25 @@ flipBtn.addEventListener(
 	false
 );
 
-let debugBtn = document.getElementById("debug");
-debugBtn.addEventListener(
+let startBtn = document.getElementById("start");
+startBtn.addEventListener(
 	"click",
 	function () {
-		let x = 1;
-		let y = 1;
-		let neighbors = 0;
-		// iterating through offsets to each border cell
-		for (let xOffset = -1; xOffset < 2; xOffset++) {
-			for (let yOffset = -1; yOffset < 2; yOffset++) {
-				console.log(`${yOffset} ${xOffset}`);
-				// check if neighbor is alive if offset is not (0, 0)
-				if (!(xOffset === 0 && yOffset === 0)) {
-					console.log("checked");
-					try {
-						let neighbor = document.getElementById(
-							`_cell${x + xOffset}_${y + yOffset}`
-						);
-						if (neighbor.classList.contains("full")) {
-							neighbors++;
-						}
-					} catch (error) {
-						console.error(
-							`cell: (${x}, ${y}) neighbor: (${x + xOffset}, ${y + yOffset})`
-						);
-					}
-				}
-			}
-		}
-
-		console.log(neighbors);
+		// stateful main loop for game
+		// state functions allow for event driven pausing via start and stop functions
+		// must have controllable timing, asychronous
 	},
 	false
 );
+
+// let debugBtn = document.getElementById("debug");
+// debugBtn.addEventListener(
+// 	"click",
+// 	function () {
+// 		() => {}
+// 	},
+// 	false
+// );
 
 function printGrid(c_grid) {
 	for (let y = 1; y < NUM_OF_CELLS + 1; y++) {
