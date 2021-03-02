@@ -1,23 +1,49 @@
 const NUM_OF_CELLS = 50;
 
-// function createArray(length) {
-// 	let arr = new Array(length || 0);
-// 	let i = length;
+function createArray(length) {
+	let arr = new Array(length || 0);
+	let i = length;
 
-// 	if (arguments.length > 1) {
-// 		let args = Array.prototype.slice.call(arguments, 1);
-// 		while (i--) arr[length - 1 - i] = createArray.apply(this, args);
-// 	}
+	if (arguments.length > 1) {
+		let args = Array.prototype.slice.call(arguments, 1);
+		while (i--) arr[length - 1 - i] = createArray.apply(this, args);
+	}
 
-// 	return arr;
-// }
+	return arr;
+}
 
-// let c_grid = createArray(NUM_OF_CELLS + 2, NUM_OF_CELLS + 2);
+// retrieve "visual grid" contents and transfer to c_grid
+function readGrid() {
+	let grid = createArray(NUM_OF_CELLS + 2, NUM_OF_CELLS + 2);
+
+	for (let y = 0; y < NUM_OF_CELLS + 2; y++) {
+		for (let x = 0; x < NUM_OF_CELLS + 2; x++) {
+			// record cell status in computational grid
+			let cell = document.getElementById(`_cell${x}_${y}`);
+			if (cell.classList.contains("full")) {
+				grid[x][y] = 1;
+			} else {
+				// this may not be necessary if grid is already full of zeroes
+				grid[x][y] = 0;
+			}
+		}
+	}
+
+	return grid;
+}
+
+// computational grid
+let c_grid = readGrid();
+// console.log(c_grid);
 
 let genBtn = document.getElementById("generation");
 genBtn.addEventListener(
 	"click",
 	function () {
+		// let updated_grid = c_grid;
+		// hacky deep copy
+		let updated_grid = JSON.parse(JSON.stringify(c_grid));
+
 		console.log("start generation...");
 		// [ x-1 ][ y-1 ] [  x  ][ y-1 ] [ x+1 ][ y-1 ]
 		// [ x-1 ][  y  ] [  x  ][  y  ] [ x+1 ][  y  ]
@@ -25,49 +51,44 @@ genBtn.addEventListener(
 
 		for (let y = 1; y < NUM_OF_CELLS + 1; y++) {
 			for (let x = 1; x < NUM_OF_CELLS + 1; x++) {
-				let cell = document.getElementById(`_cell${x}_${y}`);
-				let neighborCount = 0;
-				for (let xOffset = -1; xOffset < 2; xOffset++) {
-					for (let yOffset = -1; yOffset < 2; yOffset++) {
-						if (!(xOffset === 0 && yOffset === 0)) {
-							let neighbor = document.getElementById(
-								`_cell${x + xOffset}_${y + yOffset}`
-							);
-							if (neighbor.classList.contains("full")) {
-								neighborCount++;
-							}
+				// compute number of neighbors
+				let neighbors = 0;
 
-							// console.error(
-							// 	`cell: (${x}, ${y}) neighbor: (${x + xOffset}, ${y + yOffset})`
-							// );
-						}
-					}
-				}
-				// console.log(neighborCount);
+				// check if neighbors are alive
+				neighbors += c_grid[x - 1][y - 1];
+				neighbors += c_grid[x - 1][y + 1];
+				neighbors += c_grid[x + 1][y - 1];
+				neighbors += c_grid[x + 1][y + 1];
+				neighbors += c_grid[x - 1][y];
+				neighbors += c_grid[x + 1][y];
+				neighbors += c_grid[x][y - 1];
+				neighbors += c_grid[x][y + 1];
+
+				// console.log(neighbors);
 
 				// LIVING CELL
-				if (cell.classList.contains("full")) {
-					if (neighborCount < 2) {
+				if (c_grid[x][y] === 1) {
+					if (neighbors < 2) {
 						// Death by exposure ( <2 neighbors )
-						cell.classList.remove("full");
-						cell.classList.add("empty");
-					} else if (neighborCount > 3) {
+						updated_grid[x][y] = 0;
+					} else if (neighbors > 3) {
 						// Death by overcrowding ( >3 neighbors )
-						cell.classList.remove("full");
-						cell.classList.add("empty");
+						updated_grid[x][y] = 0;
 					}
 				}
 				// EMPTY CELL
 				else {
-					if (neighborCount === 3) {
+					if (neighbors === 3) {
 						// New Life
-						cell.classList.remove("empty");
-						cell.classList.add("full");
+						updated_grid[x][y] = 1;
 					}
 				}
 			}
 		}
 		console.log("end generation...");
+
+		c_grid = JSON.parse(JSON.stringify(updated_grid));
+		printGrid(c_grid);
 	},
 	false
 );
@@ -93,7 +114,7 @@ debugBtn.addEventListener(
 	function () {
 		let x = 1;
 		let y = 1;
-		let neighborCount = 0;
+		let neighbors = 0;
 		// iterating through offsets to each border cell
 		for (let xOffset = -1; xOffset < 2; xOffset++) {
 			for (let yOffset = -1; yOffset < 2; yOffset++) {
@@ -106,7 +127,7 @@ debugBtn.addEventListener(
 							`_cell${x + xOffset}_${y + yOffset}`
 						);
 						if (neighbor.classList.contains("full")) {
-							neighborCount++;
+							neighbors++;
 						}
 					} catch (error) {
 						console.error(
@@ -117,7 +138,7 @@ debugBtn.addEventListener(
 			}
 		}
 
-		console.log(neighborCount);
+		console.log(neighbors);
 	},
 	false
 );
@@ -125,6 +146,7 @@ debugBtn.addEventListener(
 function printGrid(c_grid) {
 	for (let y = 1; y < NUM_OF_CELLS + 1; y++) {
 		for (let x = 1; x < NUM_OF_CELLS + 1; x++) {
+			let cell = document.getElementById(`_cell${x}_${y}`);
 			if (c_grid[x][y] === 0) {
 				cell.classList.remove("full");
 				cell.classList.add("empty");
