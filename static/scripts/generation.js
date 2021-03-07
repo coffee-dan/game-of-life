@@ -114,6 +114,7 @@ let startBtn = document.getElementById("start");
 startBtn.addEventListener(
 	"click",
 	function () {
+		console.log("start button does nothing...");
 		// stateful main loop for game
 		// state functions allow for event driven pausing via start and stop functions
 		// must have controllable timing, asychronous

@@ -9,13 +9,84 @@ from os import path
 #--------------------------------------------------
 # Flask Setup
 
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect, flash, url_for
 
 app = Flask(__name__)
+app.secret_key = 'temporary_key'
 
 @app.route('/')
 def home() :
 	return render_template('board.html', NUM_OF_CELLS=50, grid=randomGrid())
+
+@app.route('/empty')
+def empty() :
+  return render_template('board.html', NUM_OF_CELLS=50, grid=blankGrid())
+
+@app.route('/lexicon/<name>')
+def lexiconLoad( name ) :
+  c_grid = loadLexiconEntry( name )
+  if not c_grid :
+    flash(f'Lexicon entry for {name} not found')
+    return redirect(url_for('empty'))
+
+  return render_template('board.html', NUM_OF_CELLS=50, grid=c_grid)
+
+
+def loadLexiconEntry( entry_name ) :
+  '''Create board with specified lexicon name'''
+
+  # Extract data from presets_file into presets_data to be further
+  # split into individual presets to be added to dictionary
+  with open( 'grid_presets.txt' ) as presets_file :
+    presets = presets_file.read().split( '\n' )
+
+  for preset in presets :
+    preset = preset.split( ',' )
+
+    name = preset[0]
+    entry_name = entry_name.replace('_', ' ')
+
+    if name.casefold() == entry_name.casefold() :
+      print('dab')
+      col_num = int( preset[ 1 ] )
+      row_num = int( preset[ 2 ] )
+
+      # Calculate values for creating visual grid
+      blank_rows = NUM_OF_CELLS - row_num
+      row_offsets = math.ceil( blank_rows/2 ), math.floor( blank_rows/2 )
+      row_barriers = row_offsets[ 0 ]+1, NUM_OF_CELLS - row_offsets[ 1 ]
+
+      blank_cols = NUM_OF_CELLS - col_num
+      col_offsets = math.ceil( blank_cols/2 ), math.floor( blank_cols/2 )
+      col_barriers = col_offsets[ 0 ]+1, NUM_OF_CELLS - col_offsets[ 1 ]
+
+      # Create empty grid to be filled with lexicon entry
+      c_grid = [ [ 0 ] * ( NUM_OF_CELLS+2 ) for _ in range( NUM_OF_CELLS+2 ) ]
+      # Populate c_grid according to chosen preset
+      #  Line num represents the position within the list of elements that make up a preset,
+      #  it starts at 3 because that is where cell placement information starts.
+      line_num = 3
+      for y in range( 1, NUM_OF_CELLS+1 ) :
+        i = 0
+        for x in range( 1, NUM_OF_CELLS+1 ) :
+          if y < row_barriers[ 0 ] :
+            c_grid[ x ][ y ] = 0
+          elif y > row_barriers[ 1 ] :
+            c_grid[ x ][ y ] = 0
+          elif x < col_barriers[ 0 ] :
+            c_grid[ x ][ y ] = 0
+          elif x > col_barriers[ 1 ] :
+            c_grid[ x ][ y ] = 0
+          else :
+            c_grid[ x ][ y ] = int( preset[ line_num ][ i ] )
+            i += 1
+        if ( ( y <= row_barriers[ 1 ] ) and ( y >= row_barriers[ 0 ] ) ) :
+          line_num += 1
+      # successfully found lexicon entry, send back to user
+      return c_grid
+  # failed to find lexicon entry
+  return False
+
 
 #--------------------------------------------------
 

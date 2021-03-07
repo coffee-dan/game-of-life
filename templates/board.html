@@ -2,6 +2,16 @@
 {% block title %}Home Page{% endblock %}
 {% block content %}
 	<h1>Gameboard</h1>
+
+	<!-- display all flash messages -->
+	{% with messages = get_flashed_messages() %}
+		{% if messages %}
+			{% for msg in messages %}
+				<p>{{ msg }}</p>
+			{% endfor %}
+		{% endif %}
+	{% endwith %}
+
 	<div class="gameboard">
 		{% for y in range( NUM_OF_CELLS+2 ) %}
 			<div id="_column{{ y }}" class="column">
@@ -14,10 +24,21 @@
 		{% endfor %}
 	</div>
 
-	<button id="start">start</button>
+	<!-- start button does not do anything yet -->
+	<!-- <button id="start">start</button> -->
 	<button id="generation">next</button>
 	<button id="flippe">flippe</button>
 	<!-- <button id="debug">debug</button> -->
+	<hr />
+
+	<!-- lexicon search not yet implemented -->
+	<!-- <form id="lexiconSearch" method="POST">
+		<label for="lexicon-name">Enter Lexicon Entry: </label>
+		<input id="lexicon-name" name="lexicon-name" placeholder="Ex: Glider" type="text">
+
+		<input type="submit" value="Search" accesskey="enter">
+	</form> -->
+	
 	
 
 	<script src="{{ url_for('static', filename='scripts/generation.js') }}"></script>
