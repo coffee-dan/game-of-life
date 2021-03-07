@@ -7,6 +7,10 @@ from PIL import Image
 from sys import exit
 from os import path
 #--------------------------------------------------
+
+NUM_OF_CELLS = 50
+
+#--------------------------------------------------
 # Flask Setup
 
 from flask import Flask, render_template, redirect, flash, url_for
@@ -14,22 +18,22 @@ from flask import Flask, render_template, redirect, flash, url_for
 app = Flask(__name__)
 app.secret_key = 'temporary_key'
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def home() :
-	return render_template('board.html', NUM_OF_CELLS=50, grid=randomGrid())
+	return render_template('board.html', NUM_OF_CELLS=NUM_OF_CELLS, grid=randomGrid())
 
-@app.route('/empty')
+@app.route('/empty', methods=['GET', 'POST'])
 def empty() :
-  return render_template('board.html', NUM_OF_CELLS=50, grid=blankGrid())
+  return render_template('board.html', NUM_OF_CELLS=NUM_OF_CELLS, grid=blankGrid())
 
-@app.route('/lexicon/<name>')
+@app.route('/lexicon/<name>', methods=['GET', 'POST'])
 def lexiconLoad( name ) :
   c_grid = loadLexiconEntry( name )
   if not c_grid :
     flash(f'Lexicon entry for {name} not found')
     return redirect(url_for('empty'))
 
-  return render_template('board.html', NUM_OF_CELLS=50, grid=c_grid)
+  return render_template('board.html', NUM_OF_CELLS=NUM_OF_CELLS, grid=c_grid)
 
 
 def loadLexiconEntry( entry_name ) :
@@ -86,11 +90,6 @@ def loadLexiconEntry( entry_name ) :
       return c_grid
   # failed to find lexicon entry
   return False
-
-
-#--------------------------------------------------
-
-NUM_OF_CELLS = 50
 
 #--------------------------------------------------
 def generation( c_grid ) :
